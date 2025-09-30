@@ -10,6 +10,8 @@ import math
 from PIL import Image, ImageTk
 import datetime
 import colorsys
+import requests
+from io import BytesIO
 
 # تنظیمات اولیه customtkinter
 ctk.set_appearance_mode("light")  # حالت روشن
@@ -26,36 +28,71 @@ class DXFtoKMLConverter:
         self.main_frame = ctk.CTkFrame(root, fg_color="#FFFDF5")
         self.main_frame.pack(fill="both", expand=True)
 
-        self.title_label = ctk.CTkLabel(self.main_frame, text="مبدل مختصات", font=ctk.CTkFont("Arial", 20, "bold"))
+        self.title_label = ctk.CTkLabel(
+            self.main_frame,
+            text="مبدل مختصات",
+            font=ctk.CTkFont("Arial", 20, "bold")
+        )
         self.title_label.pack(pady=15)
         self.animate_title_color(0)  # انیمیشن رنگی
 
-        self.btn_select = ctk.CTkButton(self.main_frame, text="انتخاب فایل", command=self.select_file, width=200, fg_color="#e0f7fa",
-                                        hover_color="#b2ebf2", text_color="black", corner_radius=10)
+        self.btn_select = ctk.CTkButton(
+            self.main_frame,
+            text="انتخاب فایل",
+            command=self.select_file,
+            width=200,
+            fg_color="#e0f7fa",
+            hover_color="#b2ebf2",
+            text_color="black",
+            corner_radius=10
+        )
         self.btn_select.pack(pady=10)
 
-        self.btn_convert = ctk.CTkButton(self.main_frame, text="تبدیل فایل", command=self.convert_and_open,
-                                         width=200, fg_color="#c8e6c9", hover_color="#a5d6a7", text_color="black",
-                                         state="disabled", corner_radius=10)
+        self.btn_convert = ctk.CTkButton(
+            self.main_frame,
+            text="تبدیل فایل",
+            command=self.convert_and_open,
+            width=200,
+            fg_color="#c8e6c9",
+            hover_color="#a5d6a7",
+            text_color="black",
+            state="disabled",
+            corner_radius=10
+        )
         self.btn_convert.pack(pady=10)
 
-        self.status = ctk.CTkLabel(self.main_frame, text="", font=ctk.CTkFont("Arial", 12), text_color="blue")
+        self.status = ctk.CTkLabel(
+            self.main_frame,
+            text="",
+            font=ctk.CTkFont("Arial", 12),
+            text_color="blue"
+        )
         self.status.pack(pady=20)
 
+        # لود لوگوها از GitHub
         try:
-            right_logo_img = Image.open("logo_right.png").resize((120, 120))
+            right_logo_url = "https://raw.githubusercontent.com/Aminrafi76/App/refs/heads/main/logo_right.png"
+            left_logo_url = "https://raw.githubusercontent.com/Aminrafi76/App/refs/heads/main/logo_left.png"
+
+            right_logo_img = Image.open(BytesIO(requests.get(right_logo_url).content)).resize((120, 120))
             self.right_logo = ImageTk.PhotoImage(right_logo_img)
             right_label = ctk.CTkLabel(self.main_frame, image=self.right_logo, text="", fg_color="#FFFDF5")
             right_label.place(relx=1.0, rely=1.0, anchor="se")
 
-            left_logo_img = Image.open("logo_left.png").resize((120, 85))
+            left_logo_img = Image.open(BytesIO(requests.get(left_logo_url).content)).resize((120, 85))
             self.left_logo = ImageTk.PhotoImage(left_logo_img)
             left_label = ctk.CTkLabel(self.main_frame, image=self.left_logo, text="", fg_color="#FFFDF5")
             left_label.place(relx=0.0, rely=1.0, anchor="sw")
-        except Exception:
-            print("لوگوها یافت نشدند، لطفاً فایل‌های logo_right.png و logo_left.png را در کنار برنامه قرار دهید.")
 
-        self.author_label = ctk.CTkLabel(self.main_frame, text="Create By Aminrafi", font=ctk.CTkFont("Arial", 10), text_color="gray")
+        except Exception as e:
+            print("❌ خطا در لود لوگوها:", e)
+
+        self.author_label = ctk.CTkLabel(
+            self.main_frame,
+            text="Create By Aminrafi",
+            font=ctk.CTkFont("Arial", 10),
+            text_color="gray"
+        )
         self.author_label.place(relx=0.5, rely=1.0, anchor="s", y=-5)
 
         self.utm_zone = 39
