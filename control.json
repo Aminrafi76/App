@@ -1,5 +1,5 @@
 {
-  "enabled": true,
+  "disable": true,
   "message": "این نسخه از برنامه غیرفعال شده است. با سازنده تماس بگیرید.",
   "blocked_ids": []
 }
